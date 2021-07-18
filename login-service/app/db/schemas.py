@@ -1,35 +1,18 @@
-from typing import List, Optional
-
 from pydantic import BaseModel
 
-
-# class RoleBase(BaseModel):
-#     title: str
-
-# class RoleCreate(RoleBase):
-#     pass
-
-
-# class Role(RoleBase):
-#     id: int
-#     users: List[User] = []
-
-#     class Config:
-#         orm_mode = True
-
-
-class UserBase(BaseModel):
-    email: str
-
-
-# class UserCreate(UserBase):
-#     password: str
-
-
-class User(UserBase):
+class Role(BaseModel):
     id: int
+    title: str
+
+    class Config:
+        orm_mode = True
+
+
+class User(BaseModel):
+    id: int
+    email: str
     is_active: bool
-    # rol_id: int
+    role: Role
 
     class Config:
         orm_mode = True
