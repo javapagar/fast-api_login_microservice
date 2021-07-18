@@ -137,7 +137,7 @@ y para realizar una implementación de la imagen en un contenedor:
 
 En este comando implementamos la imagen en un contenedor. El parámetro -p hace referencia al puerto del host: puerto del contenedor. Mencionar que el puerto del contenedor tiene que ser 8000, ya que la aplicación que hemos creado se despliega en este puerto por defecto. Por último, hay que indicar el tag de la imagen que queremos que se implemente.
 
-Si todo ha ido bien, una vez implementada la imagen en el contenedor, se ha debido de ejcutar el servidor uvicorn, y deberíamos poder acceder a la API utilizando los endpoints: http://127.0.0.1:8000; http://127.0.0.1:8000/test; http://127.0.0.1:8000/docs; http://127.0.0.1:8000/redoc
+Si todo ha ido bien, una vez implementada la imagen en el contenedor, se ha debido de ejcutar el servidor uvicorn, y deberíamos poder acceder a la API utilizando el puerto 4000 como se muestra en los endpoints: http://127.0.0.1:4000; http://127.0.0.1:4000/test; http://127.0.0.1:4000/docs; http://127.0.0.1:4000/redoc
 
 
 La gestión de contenedores e imágenes se puede hacer de una forma sencilla y gráfica utilizando la herramienta Docker Desktop.
