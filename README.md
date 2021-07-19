@@ -144,7 +144,7 @@ La gestión de contenedores e imágenes se puede hacer de una forma sencilla y g
 
 ## Base de datos con SQLAlchemy
 
-Creamos una nueva carpeta dentro de ./app. Yo la lamaré db, y en ella guadaré todos los módulos para gestionar la base de datos. Lo primero, es añadir el fichero vacío __init__.py para convertir la carpeta /db en un sub paquete del proyecto, y después añadiré un fichero, database.py, que contedrá la implementación de la conexión a la base de datos. Para probar el código utilizaré una base de datos SQLite que se guardará en memoria. Más adelante se desplegará la base de datos como otro microservicio.
+Creamos una nueva carpeta dentro de ./app. Se llamará db, y en ella estarán todos los módulos para gestionar la base de datos. Lo primero, es añadir el fichero vacío __init__.py para convertir la carpeta /db en un sub paquete del proyecto, y después añadiré un fichero, database.py, que contiene la implementación de la conexión a la base de datos. Para probar el código utilizaré una base de datos SQLite que se guardará en memoria. Más adelante se desplegará la base de datos como otro microservicio.
 
 El fichero database.py
 
@@ -162,7 +162,7 @@ El fichero database.py
 
                 Base = declarative_base()
 
-Creamos una constante con la URL de la conexión a la base de datos. Después creamos un objeto engine, que la pasa como argumento de conexión la propiedad "check_same_thread" a False. Esto se realiza sólo en SQLite, ya que no es multihilo, es decir, usa un único hilo por petición. Debido a que FastAPI permite que haya difentes hilos con la misma petición por ser asícrona, hay que evitar que accidentalmente se pueda compartir la misma conexión para varias peticiones al atacar SQLite configurando la conexión.
+Creamos una constante con la URL de la conexión a la base de datos. Después creamos un objeto engine, que la pasa como argumento de conexión la propiedad "check_same_thread" a False. Esto se realiza sólo en SQLite, ya que no es multihilo, es decir, usa un único hilo por petición. Debido a que FastAPI permite que haya diferentes hilos con la misma petición por ser asíncrona, hay que evitar que accidentalmente se pueda compartir la misma conexión para varias peticiones al atacar SQLite configurando la conexión.
 
 SessionLocal es un objeto que permitirá manejar las sesiones de cada cliente. Para ello se llama al método sessionmaker que funciona como una factoría, que se encarga de crear una nueva sesión a la que adjuntará una de las conexiones disponibles en el pool del engine.
 
@@ -196,9 +196,12 @@ Habrá que definir el modelo de datos. Eso es lo que se hace en el archivo model
 
 Las clases heredan del objeto Base que creamos en el archivo database. Las clases representan las tablas y las relaciones que se dan entre ellas, en este caso, Many to One, varios usuarios pueden tener un role.
 
-Ahora, necesitamos implementar esta funcionalidad cuando se inicialice la aplicación, se modificará el archivo main.py
+Ahora, necesitamos implementar esta funcionalidad cuando se inicialice la aplicación, se crea el módulo fill_db.py
 
-        def init_db():
+                from db import models
+                from db.database import SessionLocal
+
+                def init_db():
                 roles=["Admin","User"]
                 users = [
                         {"email":"admin@test.es",
@@ -227,15 +230,26 @@ Ahora, necesitamos implementar esta funcionalidad cuando se inicialice la aplica
                         continue
 
                 db.close()
+
+que insertará un usuario administrador. Será necesario llamarlo desde el archivo main.py, necesita importar el método.
+
+                from fastapi import FastAPI
+                from test import testapi
+
+                from db import models
+                from db.database import SessionLocal, engine
+                from db.fill_db import init_db
                 
-        models.Base.metadata.create_all(bind=engine)
+                models.Base.metadata.create_all(bind=engine)
 
-        app = FastAPI()
-        app.include_router(testapi.router)
+                app = FastAPI()
+                app.include_router(testapi.router)
 
-        init_db()
+                init_db()
 
-Nótese que se ha eliminado el enrutamiento que teniamos en este archivo, ya que lo dejaremos unicamente para inicializar la aplicación. Se ejecuta la función create_all() que generará el modelo definido de la base de datos, tablas y relaciones. También se crea una función init_db() que introduce algunos datos en la BD. Como el engine tiene configurado SQLite como base de datos se generará un archivo .db al inicializar el programa.
+Nótese que se ha eliminado el enrutamiento que teníamos en este archivo, ya que se deja únicamente para inicializar la aplicación. Se ejecuta la función create_all() que generará el modelo definido de la base de datos, tablas y relaciones. También se llama a la función init_db(). Como el engine tiene configurado SQLite como base de datos se generará un archivo .db al inicializar el programa.
+
+
 
 Otro tipo de modelos que se definen, son los modelos de Pydantic que heredan de la clase BaseModel perteneciente a la librería. Para no confundirlo con los modelos de la base de datos, vamos a crearlos en el archivo schemas.py
 
