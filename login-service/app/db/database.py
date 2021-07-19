@@ -2,7 +2,17 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./sql_app.db"
+from config import Settings
+import os
+
+settings = Settings()
+
+try:
+    SQLALCHEMY_DATABASE_URL = settings.db_url
+except:
+    pass
+
+SQLALCHEMY_DATABASE_URL =os.getenv("SQLALCHEMY_DATABASE_URL")
 
 # SQLALCHEMY_DATABASE_URL = "postgresql://user:password@postgresserver/db"
 

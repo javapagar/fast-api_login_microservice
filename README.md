@@ -249,7 +249,9 @@ que insertará un usuario administrador. Será necesario llamarlo desde el archi
 
 Nótese que se ha eliminado el enrutamiento que teníamos en este archivo, ya que se deja únicamente para inicializar la aplicación. Se ejecuta la función create_all() que generará el modelo definido de la base de datos, tablas y relaciones. También se llama a la función init_db(). Como el engine tiene configurado SQLite como base de datos se generará un archivo .db al inicializar el programa.
 
+## Variables de configuración
 
+Una buena práctica es tener la configuración de forma independiente, y no "harcodeada" en nuestra función. Un ejemplo de esta mala práxis es, por ejemplo, la constante SQLALCHEMY_DATABASE_URL de conexión a nuestra base de datos. Para refactorizar esto, se va a utilizar la librería os que está integrada en el core de python. Se seleccciona este método ya que se integra bien con nuestra configuración de Docker.
 
 Otro tipo de modelos que se definen, son los modelos de Pydantic que heredan de la clase BaseModel perteneciente a la librería. Para no confundirlo con los modelos de la base de datos, vamos a crearlos en el archivo schemas.py
 
