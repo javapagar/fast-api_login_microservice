@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+    login-db:
+        image: postgres:13-alpine
+        container_name: login-db
+        env_file: 
+            - ./login-service/app/.env
+        ports:
+            - "4000:5432"
+        restart: always
+
+    login-service:
+        image: login-service
+        build:
+            context: ./login-service
+            dockerfile: Dockerfile
+        container_name: login-service
+        env_file: 
+            - ./login-service/app/.env
+        ports:
+            - "4001:8000"
+        depends_on:
+            - login-db
+        restart: "no"

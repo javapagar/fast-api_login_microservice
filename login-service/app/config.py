@@ -1,10 +1,13 @@
 from pydantic import BaseSettings
 
 class Settings(BaseSettings):
-    #SQLALCHEMY_DATABASE_URL : str = "sqlite:///./sql_app.db"
     db_url : str
-    user : str = ""
-    password : str = ""
+    POSTGRES_USER : str
+    POSTGRES_PASSWORD : str
+    POSTGRES_SERVER : str
+    POSTGRES_PORT : str
+    POSTGRES_DB : str
 
     class Config:#desde fichero .env
         env_file=".env"
+       
