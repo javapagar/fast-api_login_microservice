@@ -6,6 +6,7 @@ https://realpython.com/fastapi-python-web-apis/
 SO Mac OS 10.13.6
 Python 3.9.6
 Docker 20.10.7
+Dbeaver lite 21.1.0
 
 
 ## Preparando el entorno
@@ -239,6 +240,40 @@ en vez de
                 SQLALCHEMY_DATABASE_URL = "sqlite:///./sql_app.db"
 
 
+## Authenticación
+
+### Login
+Necesitamos es instalar la librería python-multipart
+
+                $pip install python-multipart
+
+Para dar seguridad a las claves que se guardarán en la base de datos necesitamos protegerlas con un algoritmo de hashing. Esto permite codificar la contraseña del usuario para guardar este código resultante en la base de datos. Para el login, el usuario introducirá su contraseña en texto plano y nuestra aplicación será la encargada de codificarla con el mismo algoritmo de hashing utilizado para comprobar que coinciden, lo que le permitirá obtener los permisos necesarios. En caso de robo de la base de datos, las contraseñas no se podrán decodificar de una forma sencilla.
+Para este proceso necesitamos otra librería, passlib, que soporta distintos algoritmos de hashing. La recomendación es utilizar bcrypt
+
+                $ pip install passlib[bcrypt]
+
+La implementación del hasing se hará en el módulo /db/models.py que es donde tenemos la clase User que usará este método para crear el objeto. Para hacer el hashing necesitamos un "context" en le módulo models importaremos:
+
+                from passlib.context import CryptContext
+
+### JWT
+y python-jose, para generar y verificar JWT. Esta librería necesita un backend extra para realizar las tareas de criptografía, en el siguiente comando se usará pyca/cryptography
+
+                $ pip install python-jose[cryptography]
+
+Para crear la clave secreta que permitirá firmar el JWT esiste un comando
+
+                $ openssl rand -hex 32
+
+La cadena que nos devuelve es la clave secreta. Un buen sítio para guardar este parámetro es el fichero de configuración del entorno .env. También le diremos el algoritmo de coidficación que se utilizará para el JWT, que normalmente será el HS256, y que también guardamos en una constante. Añadiremos las siguientes lineas al final del fichero .env
+
+                SECRET_KEY = "THE_BEST_SECRET_KEY"
+                ALGORITHM = "HS256"
+
+Una vez hecho esto, modifcaremos config.py, añadiendo las propiedades de la clase Setting para poder leerlas:
+
+                SECRET_KEY : str
+                ALGORITHM : str
 
 ## Docker
 Desde 2013, este proyecto open source y sus herramientas comienzan a ganar popularidad entre los desarrolladores, ya que suponía una solución mucho más ligera a la creación de máquinas virtuales, sustituyéndolas por el uso de contenedores. Cada contenedor es capaz de albergar una aplicación y todas sus dependencias y librerías, sin necesidad de un SO, cosa a la que estas obligado, si vas a utilizar una máquina virtual. De esta forma, los desarrolladores son capaces de crear en local, de forma fácil y sencilla, un entorno idéntico al que se utilizará en producción.

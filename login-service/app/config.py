@@ -7,6 +7,9 @@ class Settings(BaseSettings):
     POSTGRES_SERVER : str
     POSTGRES_PORT : str
     POSTGRES_DB : str
+    SECRET_KEY : str
+    ALGORITHM : str
+
 
     class Config:#desde fichero .env
         env_file=".env"

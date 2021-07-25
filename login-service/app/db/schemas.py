@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Optional
 
 class Role(BaseModel):
     id: int
@@ -8,6 +9,10 @@ class Role(BaseModel):
         orm_mode = True
 
 
+
+    class Config:
+        orm_mode = True
+
 class User(BaseModel):
     id: int
     email: str
@@ -16,3 +21,16 @@ class User(BaseModel):
 
     class Config:
         orm_mode = True
+
+class LoginUser(BaseModel):
+    email: str
+    password: str
+
+# class User(BaseModel):
+#     username: str
+#     email: Optional[str] = None
+#     full_name: Optional[str] = None
+#     disabled: Optional[bool] = None
+
+class UserInDB(User):
+    hashed_password: str

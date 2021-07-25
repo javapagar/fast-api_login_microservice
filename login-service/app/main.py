@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from auth import authapi
 
 from db import models
-from db.database import SessionLocal, engine
+from db.database import engine
 from db.fill_db import init_db
 
 
