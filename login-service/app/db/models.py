@@ -31,10 +31,10 @@ class User(Base):
         return self.pwd_context.hash(password)
 
     def get_payload(self):
-        return { 'sub':self.id,
+        return { 'sub':str(self.id),
                 'email':self.email,
-                'role':self.role.title,
-                'iat':str(datetime.utcnow())}
+                'is_active':self.is_active,
+                'role':self.role.title}
 
 class Role(Base):
     __tablename__ = "roles"

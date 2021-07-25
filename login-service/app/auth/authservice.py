@@ -13,5 +13,8 @@ class AuthService():
 
     def get_user_by_username(self, db:Session, username:str):
         return db.query(User).filter(User.email == username).first()
+    
+    def get_user_by_id(self, db:Session, id:int):
+        return db.query(User).filter(User.id == id).first()
 
     

@@ -19,4 +19,5 @@ class TokenUtils():
         return jwt.encode(data_to_encode, self.secret_key, algorithm = self.algorithm)
 
     def decode_token(self,token: str):
-        return jwt.decode(token,secret_key,algorithms = [self.algorithm])
+        payload = jwt.decode(token,self.secret_key,algorithms = [self.algorithm])
+        return payload
