@@ -4,7 +4,7 @@ services:
     login-db:
         image: postgres:13-alpine
         volumes:
-            - ./db_login-service/data:/var/lib/posgresql/data
+            - ./db_login-service/data:/var/lib/postgresql/data
         container_name: login-db
         env_file: 
             - ./login-service/app/.env
